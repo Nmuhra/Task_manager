@@ -1,60 +1,54 @@
-<ion-header class="ion-no-border" [translucent]="true">
-  <ion-toolbar mode="md">
-    <ion-buttons slot="start">
-      <ion-button>
-        <ion-icon slot="icon-only" name="menu-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-
-    <ion-buttons slot="end">
-      <ion-button class="search-btn">
-        <ion-icon slot="icon-only" name="search"></ion-icon>
-      </ion-button>
-      <ion-button>
-        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-item lines="none">
+      <ion-label style="font-weight: 800;font-size: 3em;">
+        Today
+        <p style="font-weight: 400;color: #433465 ;">{{today | date:'fullDate'}}</p>
+      </ion-label>
+    </ion-item>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div id="container">
-    <strong>What's up!</strong>
-    <span class="sub-header">categories</span>
+
+  <ion-card *ngFor="let item of todoList; let i = index" class="ion-margin">
+    <ion-card-header>
+      
+      <ion-card-subtitle [style.color]="item.value.itemPriority === 'high' ? 'red' : (item.value.itemPriority === 'low' ? 'green' : 'orange')">
+        {{item.value.itemCategory}}
+      </ion-card-subtitle>
+
+      <ion-item>
+        <ion-icon *ngIf="item.value.itemPriority === 'high'" color="danger" size="small" name="ellipse"></ion-icon>
+        <ion-icon *ngIf="item.value.itemPriority === 'low'" color="success" size="small" name="ellipse"></ion-icon>
+        <ion-icon *ngIf="item.value.itemPriority === 'middle'" color="warning" size="small" name="ellipse"></ion-icon>
+        <ion-label> {{ item.value.itemName}}</ion-label>
+      </ion-item>
+
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-label>Due {{item.value.itemDueDate | date:'fullDate'}}</ion-label>
+    </ion-card-content>
+
+    <ion-row>
     
-    <!-- categories -->
-    <ion-slides pager="false" [options]="sliderConfig">
-      <ion-slide class="categories">
-          <div class="categories-buttons business" >
-            <span class="task-count">
-              40 tasks
-            </span>
-            <span class="categories-name"> Business</span>
-            <ion-progress-bar 
-            mode="ios" 
-            value="0.7"
-            ></ion-progress-bar>
-          </div>
-      </ion-slide>
-      <ion-slide class="categories">
-        <div class="categories-buttons personal">
-          <span class="task-count">
-            18 tasks
-            </span>
-          <span class="categories-name"> Personal</span>
-          <ion-progress-bar 
-          mode="ios" 
-          value="0.3"
-          ></ion-progress-bar>
-        </div>
-      </ion-slide>
-    </ion-slides>
-    
-    <span class="todays-header">TODAY'S TASKs</span>
-    <div class="task-list">
-      <!-- This is where the tasks will go -->
-      <app-task [text]="'Task 1'"></app-task>
-      <app-task [text]="'Task 2'"></app-task>
-    </div>
-  </div>
+
+      <ion-item button (click)="update(item)">
+        <ion-icon name="create-outline"></ion-icon>
+        <p>Update</p>
+      </ion-item>
+
+      <ion-item button (click)="delete(item.key)">
+        <ion-icon name="trash-outline"></ion-icon>
+        <p>Cancel</p>
+      </ion-item>
+    </ion-row>
+
+  </ion-card>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="addNewItem()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
